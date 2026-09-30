@@ -1,7 +1,7 @@
 
 # Self-Hosted Repository Intelligence Platform: Architecture and Research Plan
 
-Sep 30, 2026 · @Bhuvansh
+Sep 30, 2026 · @Mohit Yadav
 
 Verdict: feasible as a hybrid system in which deterministic program analysis generates and verifies findings, and small fine-tuned open models triage, explain and fix them. Training a foundation model from scratch is not justified. GPU compute is not the bottleneck; labels, evaluation and precision at realistic bug rates are.
 
