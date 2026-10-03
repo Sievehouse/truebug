@@ -38,6 +38,7 @@ func main() {
 	repoFlag := flag.String("repo", ".", "path to the Go module root to analyze")
 	outFlag := flag.String("out", "", "write the JSON report here (default: stdout)")
 	minFlag := flag.String("min-priority", "low", "drop findings below this priority (low|medium|high|critical)")
+	negFlag := flag.String("negatives", "", "mine maintainer suppressions into this JSONL file as labeled hard negatives")
 	flag.Parse()
 
 	minRank, ok := priorityRank[strings.ToLower(*minFlag)]
@@ -101,6 +102,30 @@ func main() {
 	}
 
 	summarize(report, *outFlag)
+
+	if *negFlag != "" {
+		writeNegatives(repoDir, report, *negFlag)
+	}
+}
+
+// writeNegatives dumps mined suppressions as newline-delimited JSON, the format
+// the training pipeline reads.
+func writeNegatives(repoDir string, report findings.Report, path string) {
+	negs := findings.MineNegatives(repoDir, report)
+
+	var buf strings.Builder
+	for _, n := range negs {
+		line, err := json.Marshal(n)
+		if err != nil {
+			continue
+		}
+		buf.Write(line)
+		buf.WriteByte('\n')
+	}
+	if err := os.WriteFile(path, []byte(buf.String()), 0o644); err != nil {
+		fatal(err)
+	}
+	fmt.Fprintf(os.Stderr, "mined %d hard negatives -> %s\n", len(negs), path)
 }
 
 // ---------------------------------------------------------------------------
@@ -338,9 +363,19 @@ func summarize(r findings.Report, outPath string) {
 		}
 	}
 
+	structural, byComment := 0, 0
+	for _, f := range r.Suppressed {
+		if f.SuppressReason == "vendored" || f.SuppressReason == "generated" {
+			structural++
+		} else {
+			byComment++
+		}
+	}
+
 	fmt.Fprintf(os.Stderr, "%s\n", bar)
-	fmt.Fprintf(os.Stderr, "reported: %d   (suppressed %d vendored/generated, %d in tests)\n",
-		len(r.Findings), len(r.Suppressed), tests)
+	fmt.Fprintf(os.Stderr, "reported: %d   (%d in tests)\n", len(r.Findings), tests)
+	fmt.Fprintf(os.Stderr, "suppressed: %d   (%d vendored/generated, %d by maintainer comment)\n",
+		len(r.Suppressed), structural, byComment)
 	for _, p := range []string{"critical", "high", "medium", "low"} {
 		if byPriority[p] > 0 {
 			fmt.Fprintf(os.Stderr, "  %-9s %d\n", p, byPriority[p])

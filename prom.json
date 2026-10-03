@@ -1,38 +1,22 @@
 {
   "repo": "C:\\Users\\MOHIT YADAV\\prometheus",
   "commit": "961c9ba40923ca4d7adf4a7a9167e56d0406df83",
-  "generated_at": "2026-10-03T20:28:08.3193927Z",
+  "generated_at": "2026-10-03T20:46:11.5710786Z",
   "tools": [
     {
       "name": "go vet",
       "ran": true,
       "findings": 70,
-      "seconds": 388.08
+      "seconds": 55.01
     },
     {
       "name": "staticcheck",
       "ran": true,
       "findings": 273,
-      "seconds": 72.77
+      "seconds": 8.72
     }
   ],
   "findings": [
-    {
-      "fingerprint": "1bb293f8a072c511",
-      "tool": "staticcheck",
-      "rule": "SA2001",
-      "category": "CONC.MISUSE",
-      "severity": "error",
-      "priority": "critical",
-      "score": 80,
-      "file": "tsdb/index/postings.go",
-      "line": 387,
-      "column": 2,
-      "message": "empty critical section",
-      "is_test": false,
-      "is_generated": false,
-      "is_vendored": false
-    },
     {
       "fingerprint": "bfd601dd13b0ade9",
       "tool": "go vet",
@@ -45,22 +29,6 @@
       "line": 39,
       "column": 29,
       "message": "possible misuse of unsafe.Pointer",
-      "is_test": false,
-      "is_generated": false,
-      "is_vendored": false
-    },
-    {
-      "fingerprint": "b98fcbdd2e800106",
-      "tool": "staticcheck",
-      "rule": "SA1019",
-      "category": "API.MISUSE",
-      "severity": "error",
-      "priority": "medium",
-      "score": 40,
-      "file": "cmd/prometheus/main.go",
-      "line": 153,
-      "column": 2,
-      "message": "github.com/prometheus/common/model.NameValidationScheme is deprecated: This variable should not be used and might be removed in the far future. If you wish to stick to the legacy name validation use `IsValidLegacyMetricName()` and `LabelName.IsValidLegacy()` methods instead. This variable is here as an escape hatch for emergency cases, given the recent change from `LegacyValidation` to `UTF8Validation`, e.g., to delay UTF-8 migrations in time or aid in debugging unforeseen results of the change. In such a case, a temporary assignment to `LegacyValidation` value in the `init()` function in your main.go or so, could be considered.",
       "is_test": false,
       "is_generated": false,
       "is_vendored": false
@@ -93,38 +61,6 @@
       "line": 119,
       "column": 17,
       "message": "github.com/prometheus/prometheus/model/labels.MetricName is deprecated: Instead, consider using schema.Metadata structure and its methods for consistent metadata behaviour with the newly added __type__ and __unit__ labels. Alternatively use github.com/prometheus/common/model.MetricNameLabel for the direct replacement.",
-      "is_test": false,
-      "is_generated": false,
-      "is_vendored": false
-    },
-    {
-      "fingerprint": "8b0091b07046626a",
-      "tool": "staticcheck",
-      "rule": "SA1019",
-      "category": "API.MISUSE",
-      "severity": "error",
-      "priority": "medium",
-      "score": 40,
-      "file": "cmd/promtool/main.go",
-      "line": 74,
-      "column": 2,
-      "message": "github.com/prometheus/common/model.NameValidationScheme is deprecated: This variable should not be used and might be removed in the far future. If you wish to stick to the legacy name validation use `IsValidLegacyMetricName()` and `LabelName.IsValidLegacy()` methods instead. This variable is here as an escape hatch for emergency cases, given the recent change from `LegacyValidation` to `UTF8Validation`, e.g., to delay UTF-8 migrations in time or aid in debugging unforeseen results of the change. In such a case, a temporary assignment to `LegacyValidation` value in the `init()` function in your main.go or so, could be considered.",
-      "is_test": false,
-      "is_generated": false,
-      "is_vendored": false
-    },
-    {
-      "fingerprint": "8b0091b07046626a",
-      "tool": "staticcheck",
-      "rule": "SA1019",
-      "category": "API.MISUSE",
-      "severity": "error",
-      "priority": "medium",
-      "score": 40,
-      "file": "cmd/promtool/main.go",
-      "line": 1122,
-      "column": 28,
-      "message": "github.com/prometheus/common/model.NameValidationScheme is deprecated: This variable should not be used and might be removed in the far future. If you wish to stick to the legacy name validation use `IsValidLegacyMetricName()` and `LabelName.IsValidLegacy()` methods instead. This variable is here as an escape hatch for emergency cases, given the recent change from `LegacyValidation` to `UTF8Validation`, e.g., to delay UTF-8 migrations in time or aid in debugging unforeseen results of the change. In such a case, a temporary assignment to `LegacyValidation` value in the `init()` function in your main.go or so, could be considered.",
       "is_test": false,
       "is_generated": false,
       "is_vendored": false
@@ -173,22 +109,6 @@
       "line": 828,
       "column": 60,
       "message": "github.com/prometheus/prometheus/model/labels.MetricName is deprecated: Instead, consider using schema.Metadata structure and its methods for consistent metadata behaviour with the newly added __type__ and __unit__ labels. Alternatively use github.com/prometheus/common/model.MetricNameLabel for the direct replacement.",
-      "is_test": false,
-      "is_generated": false,
-      "is_vendored": false
-    },
-    {
-      "fingerprint": "c784996db5f34c56",
-      "tool": "staticcheck",
-      "rule": "SA1019",
-      "category": "API.MISUSE",
-      "severity": "error",
-      "priority": "medium",
-      "score": 40,
-      "file": "config/config.go",
-      "line": 991,
-      "column": 5,
-      "message": "github.com/prometheus/common/model.NameValidationScheme is deprecated: This variable should not be used and might be removed in the far future. If you wish to stick to the legacy name validation use `IsValidLegacyMetricName()` and `LabelName.IsValidLegacy()` methods instead. This variable is here as an escape hatch for emergency cases, given the recent change from `LegacyValidation` to `UTF8Validation`, e.g., to delay UTF-8 migrations in time or aid in debugging unforeseen results of the change. In such a case, a temporary assignment to `LegacyValidation` value in the `init()` function in your main.go or so, could be considered.",
       "is_test": false,
       "is_generated": false,
       "is_vendored": false
@@ -301,150 +221,6 @@
       "line": 871,
       "column": 44,
       "message": "k8s.io/api/core/v1.Endpoints is deprecated: This API is deprecated in v1.33+. Use discoveryv1.EndpointSlice. ",
-      "is_test": false,
-      "is_generated": false,
-      "is_vendored": false
-    },
-    {
-      "fingerprint": "2224c9c2046b3d79",
-      "tool": "staticcheck",
-      "rule": "SA1019",
-      "category": "API.MISUSE",
-      "severity": "error",
-      "priority": "medium",
-      "score": 40,
-      "file": "discovery/scaleway/instance.go",
-      "line": 203,
-      "column": 6,
-      "message": "(github.com/scaleway/scaleway-sdk-go/api/instance/v1.Server).IPv6 is deprecated: IPv6: instance IPv6 address (deprecated when `routed_ip_enabled` is `True`). ",
-      "is_test": false,
-      "is_generated": false,
-      "is_vendored": false
-    },
-    {
-      "fingerprint": "2224c9c2046b3d79",
-      "tool": "staticcheck",
-      "rule": "SA1019",
-      "category": "API.MISUSE",
-      "severity": "error",
-      "priority": "medium",
-      "score": 40,
-      "file": "discovery/scaleway/instance.go",
-      "line": 204,
-      "column": 55,
-      "message": "(github.com/scaleway/scaleway-sdk-go/api/instance/v1.Server).IPv6 is deprecated: IPv6: instance IPv6 address (deprecated when `routed_ip_enabled` is `True`). ",
-      "is_test": false,
-      "is_generated": false,
-      "is_vendored": false
-    },
-    {
-      "fingerprint": "2224c9c2046b3d79",
-      "tool": "staticcheck",
-      "rule": "SA1019",
-      "category": "API.MISUSE",
-      "severity": "error",
-      "priority": "medium",
-      "score": 40,
-      "file": "discovery/scaleway/instance.go",
-      "line": 205,
-      "column": 11,
-      "message": "(github.com/scaleway/scaleway-sdk-go/api/instance/v1.Server).IPv6 is deprecated: IPv6: instance IPv6 address (deprecated when `routed_ip_enabled` is `True`). ",
-      "is_test": false,
-      "is_generated": false,
-      "is_vendored": false
-    },
-    {
-      "fingerprint": "0dae8bfc07e9caa6",
-      "tool": "staticcheck",
-      "rule": "SA1019",
-      "category": "API.MISUSE",
-      "severity": "error",
-      "priority": "medium",
-      "score": 40,
-      "file": "discovery/scaleway/instance.go",
-      "line": 208,
-      "column": 6,
-      "message": "(github.com/scaleway/scaleway-sdk-go/api/instance/v1.Server).PublicIP is deprecated: PublicIP: information about the public IP (deprecated in favor of `public_ips`). ",
-      "is_test": false,
-      "is_generated": false,
-      "is_vendored": false
-    },
-    {
-      "fingerprint": "0dae8bfc07e9caa6",
-      "tool": "staticcheck",
-      "rule": "SA1019",
-      "category": "API.MISUSE",
-      "severity": "error",
-      "priority": "medium",
-      "score": 40,
-      "file": "discovery/scaleway/instance.go",
-      "line": 209,
-      "column": 7,
-      "message": "(github.com/scaleway/scaleway-sdk-go/api/instance/v1.Server).PublicIP is deprecated: PublicIP: information about the public IP (deprecated in favor of `public_ips`). ",
-      "is_test": false,
-      "is_generated": false,
-      "is_vendored": false
-    },
-    {
-      "fingerprint": "0dae8bfc07e9caa6",
-      "tool": "staticcheck",
-      "rule": "SA1019",
-      "category": "API.MISUSE",
-      "severity": "error",
-      "priority": "medium",
-      "score": 40,
-      "file": "discovery/scaleway/instance.go",
-      "line": 210,
-      "column": 56,
-      "message": "(github.com/scaleway/scaleway-sdk-go/api/instance/v1.Server).PublicIP is deprecated: PublicIP: information about the public IP (deprecated in favor of `public_ips`). ",
-      "is_test": false,
-      "is_generated": false,
-      "is_vendored": false
-    },
-    {
-      "fingerprint": "0dae8bfc07e9caa6",
-      "tool": "staticcheck",
-      "rule": "SA1019",
-      "category": "API.MISUSE",
-      "severity": "error",
-      "priority": "medium",
-      "score": 40,
-      "file": "discovery/scaleway/instance.go",
-      "line": 212,
-      "column": 11,
-      "message": "(github.com/scaleway/scaleway-sdk-go/api/instance/v1.Server).PublicIP is deprecated: PublicIP: information about the public IP (deprecated in favor of `public_ips`). ",
-      "is_test": false,
-      "is_generated": false,
-      "is_vendored": false
-    },
-    {
-      "fingerprint": "0dae8bfc07e9caa6",
-      "tool": "staticcheck",
-      "rule": "SA1019",
-      "category": "API.MISUSE",
-      "severity": "error",
-      "priority": "medium",
-      "score": 40,
-      "file": "discovery/scaleway/instance.go",
-      "line": 246,
-      "column": 33,
-      "message": "(github.com/scaleway/scaleway-sdk-go/api/instance/v1.Server).PublicIP is deprecated: PublicIP: information about the public IP (deprecated in favor of `public_ips`). ",
-      "is_test": false,
-      "is_generated": false,
-      "is_vendored": false
-    },
-    {
-      "fingerprint": "2224c9c2046b3d79",
-      "tool": "staticcheck",
-      "rule": "SA1019",
-      "category": "API.MISUSE",
-      "severity": "error",
-      "priority": "medium",
-      "score": 40,
-      "file": "discovery/scaleway/instance.go",
-      "line": 246,
-      "column": 59,
-      "message": "(github.com/scaleway/scaleway-sdk-go/api/instance/v1.Server).IPv6 is deprecated: IPv6: instance IPv6 address (deprecated when `routed_ip_enabled` is `True`). ",
       "is_test": false,
       "is_generated": false,
       "is_vendored": false
@@ -1042,22 +818,6 @@
       "is_vendored": false
     },
     {
-      "fingerprint": "21e50246bd18b3c6",
-      "tool": "staticcheck",
-      "rule": "SA1019",
-      "category": "API.MISUSE",
-      "severity": "error",
-      "priority": "medium",
-      "score": 40,
-      "file": "storage/remote/otlptranslator/prometheusremotewrite/metrics_to_prw.go",
-      "line": 482,
-      "column": 3,
-      "message": "(github.com/prometheus/otlptranslator.LabelNamer).UnderscoreLabelSanitization is deprecated: This will be removed in a future version of otlptranslator. ",
-      "is_test": false,
-      "is_generated": false,
-      "is_vendored": false
-    },
-    {
       "fingerprint": "c2dcbd3fd7c62bf9",
       "tool": "staticcheck",
       "rule": "SA1019",
@@ -1314,22 +1074,6 @@
       "is_vendored": false
     },
     {
-      "fingerprint": "64e69c94301553a4",
-      "tool": "staticcheck",
-      "rule": "SA1019",
-      "category": "API.MISUSE",
-      "severity": "error",
-      "priority": "medium",
-      "score": 40,
-      "file": "util/fmtutil/format.go",
-      "line": 54,
-      "column": 33,
-      "message": "github.com/prometheus/common/model.NameValidationScheme is deprecated: This variable should not be used and might be removed in the far future. If you wish to stick to the legacy name validation use `IsValidLegacyMetricName()` and `LabelName.IsValidLegacy()` methods instead. This variable is here as an escape hatch for emergency cases, given the recent change from `LegacyValidation` to `UTF8Validation`, e.g., to delay UTF-8 migrations in time or aid in debugging unforeseen results of the change. In such a case, a temporary assignment to `LegacyValidation` value in the `init()` function in your main.go or so, could be considered.",
-      "is_test": false,
-      "is_generated": false,
-      "is_vendored": false
-    },
-    {
       "fingerprint": "48e3c3fe48e5bdcb",
       "tool": "go vet",
       "rule": "vet.other",
@@ -1438,118 +1182,6 @@
       "column": 17,
       "message": "github.com/prometheus/prometheus/model/labels.MetricName is deprecated: Instead, consider using schema.Metadata structure and its methods for consistent metadata behaviour with the newly added __type__ and __unit__ labels. Alternatively use github.com/prometheus/common/model.MetricNameLabel for the direct replacement.",
       "is_test": false,
-      "is_generated": false,
-      "is_vendored": false
-    },
-    {
-      "fingerprint": "edccee2b3eb6c0d4",
-      "tool": "staticcheck",
-      "rule": "SA6002",
-      "category": "PERF",
-      "severity": "error",
-      "priority": "low",
-      "score": 25,
-      "file": "tsdb/agent/db.go",
-      "line": 1229,
-      "column": 17,
-      "message": "argument should be pointer-like to avoid allocations",
-      "is_test": false,
-      "is_generated": false,
-      "is_vendored": false
-    },
-    {
-      "fingerprint": "edccee2b3eb6c0d4",
-      "tool": "staticcheck",
-      "rule": "SA6002",
-      "category": "PERF",
-      "severity": "error",
-      "priority": "low",
-      "score": 25,
-      "file": "tsdb/agent/db.go",
-      "line": 1347,
-      "column": 18,
-      "message": "argument should be pointer-like to avoid allocations",
-      "is_test": false,
-      "is_generated": false,
-      "is_vendored": false
-    },
-    {
-      "fingerprint": "5488b83700ea9f33",
-      "tool": "staticcheck",
-      "rule": "SA5012",
-      "category": "CORRECTNESS",
-      "severity": "error",
-      "priority": "low",
-      "score": 20,
-      "file": "model/labels/labels_test.go",
-      "line": 464,
-      "column": 41,
-      "message": "variadic argument \"ss\" is expected to have even number of elements, but has 3 elements",
-      "is_test": true,
-      "is_generated": false,
-      "is_vendored": false
-    },
-    {
-      "fingerprint": "cb0048a3eabcc10b",
-      "tool": "staticcheck",
-      "rule": "SA4010",
-      "category": "CODE.SMELL",
-      "severity": "error",
-      "priority": "low",
-      "score": 17,
-      "file": "tsdb/db_test.go",
-      "line": 3955,
-      "column": 9,
-      "message": "this result of append is never used, except maybe in other appends",
-      "is_test": true,
-      "is_generated": false,
-      "is_vendored": false
-    },
-    {
-      "fingerprint": "cb0048a3eabcc10b",
-      "tool": "staticcheck",
-      "rule": "SA4010",
-      "category": "CODE.SMELL",
-      "severity": "error",
-      "priority": "low",
-      "score": 17,
-      "file": "tsdb/db_test.go",
-      "line": 4086,
-      "column": 9,
-      "message": "this result of append is never used, except maybe in other appends",
-      "is_test": true,
-      "is_generated": false,
-      "is_vendored": false
-    },
-    {
-      "fingerprint": "2c4027d9f79a096a",
-      "tool": "staticcheck",
-      "rule": "SA1019",
-      "category": "API.MISUSE",
-      "severity": "error",
-      "priority": "low",
-      "score": 12,
-      "file": "cmd/prometheus/main_test.go",
-      "line": 56,
-      "column": 2,
-      "message": "github.com/prometheus/common/model.NameValidationScheme is deprecated: This variable should not be used and might be removed in the far future. If you wish to stick to the legacy name validation use `IsValidLegacyMetricName()` and `LabelName.IsValidLegacy()` methods instead. This variable is here as an escape hatch for emergency cases, given the recent change from `LegacyValidation` to `UTF8Validation`, e.g., to delay UTF-8 migrations in time or aid in debugging unforeseen results of the change. In such a case, a temporary assignment to `LegacyValidation` value in the `init()` function in your main.go or so, could be considered.",
-      "is_test": true,
-      "is_generated": false,
-      "is_vendored": false
-    },
-    {
-      "fingerprint": "68c0f754778e3981",
-      "tool": "staticcheck",
-      "rule": "SA1019",
-      "category": "API.MISUSE",
-      "severity": "error",
-      "priority": "low",
-      "score": 12,
-      "file": "cmd/promtool/main_test.go",
-      "line": 48,
-      "column": 2,
-      "message": "github.com/prometheus/common/model.NameValidationScheme is deprecated: This variable should not be used and might be removed in the far future. If you wish to stick to the legacy name validation use `IsValidLegacyMetricName()` and `LabelName.IsValidLegacy()` methods instead. This variable is here as an escape hatch for emergency cases, given the recent change from `LegacyValidation` to `UTF8Validation`, e.g., to delay UTF-8 migrations in time or aid in debugging unforeseen results of the change. In such a case, a temporary assignment to `LegacyValidation` value in the `init()` function in your main.go or so, could be considered.",
-      "is_test": true,
       "is_generated": false,
       "is_vendored": false
     },
@@ -3090,70 +2722,6 @@
       "is_vendored": false
     },
     {
-      "fingerprint": "5cdecb2abe02e476",
-      "tool": "staticcheck",
-      "rule": "ST1005",
-      "category": "CODE.STYLE",
-      "severity": "error",
-      "priority": "low",
-      "score": 10,
-      "file": "discovery/uyuni/uyuni.go",
-      "line": 145,
-      "column": 10,
-      "message": "error strings should not be capitalized",
-      "is_test": false,
-      "is_generated": false,
-      "is_vendored": false
-    },
-    {
-      "fingerprint": "5cdecb2abe02e476",
-      "tool": "staticcheck",
-      "rule": "ST1005",
-      "category": "CODE.STYLE",
-      "severity": "error",
-      "priority": "low",
-      "score": 10,
-      "file": "discovery/uyuni/uyuni.go",
-      "line": 151,
-      "column": 10,
-      "message": "error strings should not be capitalized",
-      "is_test": false,
-      "is_generated": false,
-      "is_vendored": false
-    },
-    {
-      "fingerprint": "5cdecb2abe02e476",
-      "tool": "staticcheck",
-      "rule": "ST1005",
-      "category": "CODE.STYLE",
-      "severity": "error",
-      "priority": "low",
-      "score": 10,
-      "file": "discovery/uyuni/uyuni.go",
-      "line": 156,
-      "column": 10,
-      "message": "error strings should not be capitalized",
-      "is_test": false,
-      "is_generated": false,
-      "is_vendored": false
-    },
-    {
-      "fingerprint": "5cdecb2abe02e476",
-      "tool": "staticcheck",
-      "rule": "ST1005",
-      "category": "CODE.STYLE",
-      "severity": "error",
-      "priority": "low",
-      "score": 10,
-      "file": "discovery/uyuni/uyuni.go",
-      "line": 160,
-      "column": 10,
-      "message": "error strings should not be capitalized",
-      "is_test": false,
-      "is_generated": false,
-      "is_vendored": false
-    },
-    {
       "fingerprint": "4bd018863affef3b",
       "tool": "staticcheck",
       "rule": "ST1012",
@@ -3600,6 +3168,467 @@
       "is_test": false,
       "is_generated": false,
       "is_vendored": false
+    }
+  ],
+  "suppressed": [
+    {
+      "fingerprint": "1bb293f8a072c511",
+      "tool": "staticcheck",
+      "rule": "SA2001",
+      "category": "CONC.MISUSE",
+      "severity": "error",
+      "priority": "critical",
+      "score": 80,
+      "file": "tsdb/index/postings.go",
+      "line": 387,
+      "column": 2,
+      "message": "empty critical section",
+      "is_test": false,
+      "is_generated": false,
+      "is_vendored": false,
+      "suppress_reason": "nolint:staticcheck"
+    },
+    {
+      "fingerprint": "b98fcbdd2e800106",
+      "tool": "staticcheck",
+      "rule": "SA1019",
+      "category": "API.MISUSE",
+      "severity": "error",
+      "priority": "medium",
+      "score": 40,
+      "file": "cmd/prometheus/main.go",
+      "line": 153,
+      "column": 2,
+      "message": "github.com/prometheus/common/model.NameValidationScheme is deprecated: This variable should not be used and might be removed in the far future. If you wish to stick to the legacy name validation use `IsValidLegacyMetricName()` and `LabelName.IsValidLegacy()` methods instead. This variable is here as an escape hatch for emergency cases, given the recent change from `LegacyValidation` to `UTF8Validation`, e.g., to delay UTF-8 migrations in time or aid in debugging unforeseen results of the change. In such a case, a temporary assignment to `LegacyValidation` value in the `init()` function in your main.go or so, could be considered.",
+      "is_test": false,
+      "is_generated": false,
+      "is_vendored": false,
+      "suppress_reason": "nolint:staticcheck"
+    },
+    {
+      "fingerprint": "8b0091b07046626a",
+      "tool": "staticcheck",
+      "rule": "SA1019",
+      "category": "API.MISUSE",
+      "severity": "error",
+      "priority": "medium",
+      "score": 40,
+      "file": "cmd/promtool/main.go",
+      "line": 74,
+      "column": 2,
+      "message": "github.com/prometheus/common/model.NameValidationScheme is deprecated: This variable should not be used and might be removed in the far future. If you wish to stick to the legacy name validation use `IsValidLegacyMetricName()` and `LabelName.IsValidLegacy()` methods instead. This variable is here as an escape hatch for emergency cases, given the recent change from `LegacyValidation` to `UTF8Validation`, e.g., to delay UTF-8 migrations in time or aid in debugging unforeseen results of the change. In such a case, a temporary assignment to `LegacyValidation` value in the `init()` function in your main.go or so, could be considered.",
+      "is_test": false,
+      "is_generated": false,
+      "is_vendored": false,
+      "suppress_reason": "nolint:staticcheck"
+    },
+    {
+      "fingerprint": "8b0091b07046626a",
+      "tool": "staticcheck",
+      "rule": "SA1019",
+      "category": "API.MISUSE",
+      "severity": "error",
+      "priority": "medium",
+      "score": 40,
+      "file": "cmd/promtool/main.go",
+      "line": 1122,
+      "column": 28,
+      "message": "github.com/prometheus/common/model.NameValidationScheme is deprecated: This variable should not be used and might be removed in the far future. If you wish to stick to the legacy name validation use `IsValidLegacyMetricName()` and `LabelName.IsValidLegacy()` methods instead. This variable is here as an escape hatch for emergency cases, given the recent change from `LegacyValidation` to `UTF8Validation`, e.g., to delay UTF-8 migrations in time or aid in debugging unforeseen results of the change. In such a case, a temporary assignment to `LegacyValidation` value in the `init()` function in your main.go or so, could be considered.",
+      "is_test": false,
+      "is_generated": false,
+      "is_vendored": false,
+      "suppress_reason": "nolint:staticcheck"
+    },
+    {
+      "fingerprint": "c784996db5f34c56",
+      "tool": "staticcheck",
+      "rule": "SA1019",
+      "category": "API.MISUSE",
+      "severity": "error",
+      "priority": "medium",
+      "score": 40,
+      "file": "config/config.go",
+      "line": 991,
+      "column": 5,
+      "message": "github.com/prometheus/common/model.NameValidationScheme is deprecated: This variable should not be used and might be removed in the far future. If you wish to stick to the legacy name validation use `IsValidLegacyMetricName()` and `LabelName.IsValidLegacy()` methods instead. This variable is here as an escape hatch for emergency cases, given the recent change from `LegacyValidation` to `UTF8Validation`, e.g., to delay UTF-8 migrations in time or aid in debugging unforeseen results of the change. In such a case, a temporary assignment to `LegacyValidation` value in the `init()` function in your main.go or so, could be considered.",
+      "is_test": false,
+      "is_generated": false,
+      "is_vendored": false,
+      "suppress_reason": "nolint:staticcheck"
+    },
+    {
+      "fingerprint": "2224c9c2046b3d79",
+      "tool": "staticcheck",
+      "rule": "SA1019",
+      "category": "API.MISUSE",
+      "severity": "error",
+      "priority": "medium",
+      "score": 40,
+      "file": "discovery/scaleway/instance.go",
+      "line": 203,
+      "column": 6,
+      "message": "(github.com/scaleway/scaleway-sdk-go/api/instance/v1.Server).IPv6 is deprecated: IPv6: instance IPv6 address (deprecated when `routed_ip_enabled` is `True`). ",
+      "is_test": false,
+      "is_generated": false,
+      "is_vendored": false,
+      "suppress_reason": "nolint:staticcheck"
+    },
+    {
+      "fingerprint": "2224c9c2046b3d79",
+      "tool": "staticcheck",
+      "rule": "SA1019",
+      "category": "API.MISUSE",
+      "severity": "error",
+      "priority": "medium",
+      "score": 40,
+      "file": "discovery/scaleway/instance.go",
+      "line": 204,
+      "column": 55,
+      "message": "(github.com/scaleway/scaleway-sdk-go/api/instance/v1.Server).IPv6 is deprecated: IPv6: instance IPv6 address (deprecated when `routed_ip_enabled` is `True`). ",
+      "is_test": false,
+      "is_generated": false,
+      "is_vendored": false,
+      "suppress_reason": "nolint:staticcheck"
+    },
+    {
+      "fingerprint": "2224c9c2046b3d79",
+      "tool": "staticcheck",
+      "rule": "SA1019",
+      "category": "API.MISUSE",
+      "severity": "error",
+      "priority": "medium",
+      "score": 40,
+      "file": "discovery/scaleway/instance.go",
+      "line": 205,
+      "column": 11,
+      "message": "(github.com/scaleway/scaleway-sdk-go/api/instance/v1.Server).IPv6 is deprecated: IPv6: instance IPv6 address (deprecated when `routed_ip_enabled` is `True`). ",
+      "is_test": false,
+      "is_generated": false,
+      "is_vendored": false,
+      "suppress_reason": "nolint:staticcheck"
+    },
+    {
+      "fingerprint": "0dae8bfc07e9caa6",
+      "tool": "staticcheck",
+      "rule": "SA1019",
+      "category": "API.MISUSE",
+      "severity": "error",
+      "priority": "medium",
+      "score": 40,
+      "file": "discovery/scaleway/instance.go",
+      "line": 208,
+      "column": 6,
+      "message": "(github.com/scaleway/scaleway-sdk-go/api/instance/v1.Server).PublicIP is deprecated: PublicIP: information about the public IP (deprecated in favor of `public_ips`). ",
+      "is_test": false,
+      "is_generated": false,
+      "is_vendored": false,
+      "suppress_reason": "nolint:staticcheck"
+    },
+    {
+      "fingerprint": "0dae8bfc07e9caa6",
+      "tool": "staticcheck",
+      "rule": "SA1019",
+      "category": "API.MISUSE",
+      "severity": "error",
+      "priority": "medium",
+      "score": 40,
+      "file": "discovery/scaleway/instance.go",
+      "line": 209,
+      "column": 7,
+      "message": "(github.com/scaleway/scaleway-sdk-go/api/instance/v1.Server).PublicIP is deprecated: PublicIP: information about the public IP (deprecated in favor of `public_ips`). ",
+      "is_test": false,
+      "is_generated": false,
+      "is_vendored": false,
+      "suppress_reason": "nolint:staticcheck"
+    },
+    {
+      "fingerprint": "0dae8bfc07e9caa6",
+      "tool": "staticcheck",
+      "rule": "SA1019",
+      "category": "API.MISUSE",
+      "severity": "error",
+      "priority": "medium",
+      "score": 40,
+      "file": "discovery/scaleway/instance.go",
+      "line": 210,
+      "column": 56,
+      "message": "(github.com/scaleway/scaleway-sdk-go/api/instance/v1.Server).PublicIP is deprecated: PublicIP: information about the public IP (deprecated in favor of `public_ips`). ",
+      "is_test": false,
+      "is_generated": false,
+      "is_vendored": false,
+      "suppress_reason": "nolint:staticcheck"
+    },
+    {
+      "fingerprint": "0dae8bfc07e9caa6",
+      "tool": "staticcheck",
+      "rule": "SA1019",
+      "category": "API.MISUSE",
+      "severity": "error",
+      "priority": "medium",
+      "score": 40,
+      "file": "discovery/scaleway/instance.go",
+      "line": 212,
+      "column": 11,
+      "message": "(github.com/scaleway/scaleway-sdk-go/api/instance/v1.Server).PublicIP is deprecated: PublicIP: information about the public IP (deprecated in favor of `public_ips`). ",
+      "is_test": false,
+      "is_generated": false,
+      "is_vendored": false,
+      "suppress_reason": "nolint:staticcheck"
+    },
+    {
+      "fingerprint": "0dae8bfc07e9caa6",
+      "tool": "staticcheck",
+      "rule": "SA1019",
+      "category": "API.MISUSE",
+      "severity": "error",
+      "priority": "medium",
+      "score": 40,
+      "file": "discovery/scaleway/instance.go",
+      "line": 246,
+      "column": 33,
+      "message": "(github.com/scaleway/scaleway-sdk-go/api/instance/v1.Server).PublicIP is deprecated: PublicIP: information about the public IP (deprecated in favor of `public_ips`). ",
+      "is_test": false,
+      "is_generated": false,
+      "is_vendored": false,
+      "suppress_reason": "nolint:staticcheck"
+    },
+    {
+      "fingerprint": "2224c9c2046b3d79",
+      "tool": "staticcheck",
+      "rule": "SA1019",
+      "category": "API.MISUSE",
+      "severity": "error",
+      "priority": "medium",
+      "score": 40,
+      "file": "discovery/scaleway/instance.go",
+      "line": 246,
+      "column": 59,
+      "message": "(github.com/scaleway/scaleway-sdk-go/api/instance/v1.Server).IPv6 is deprecated: IPv6: instance IPv6 address (deprecated when `routed_ip_enabled` is `True`). ",
+      "is_test": false,
+      "is_generated": false,
+      "is_vendored": false,
+      "suppress_reason": "nolint:staticcheck"
+    },
+    {
+      "fingerprint": "21e50246bd18b3c6",
+      "tool": "staticcheck",
+      "rule": "SA1019",
+      "category": "API.MISUSE",
+      "severity": "error",
+      "priority": "medium",
+      "score": 40,
+      "file": "storage/remote/otlptranslator/prometheusremotewrite/metrics_to_prw.go",
+      "line": 482,
+      "column": 3,
+      "message": "(github.com/prometheus/otlptranslator.LabelNamer).UnderscoreLabelSanitization is deprecated: This will be removed in a future version of otlptranslator. ",
+      "is_test": false,
+      "is_generated": false,
+      "is_vendored": false,
+      "suppress_reason": "nolint:staticcheck"
+    },
+    {
+      "fingerprint": "64e69c94301553a4",
+      "tool": "staticcheck",
+      "rule": "SA1019",
+      "category": "API.MISUSE",
+      "severity": "error",
+      "priority": "medium",
+      "score": 40,
+      "file": "util/fmtutil/format.go",
+      "line": 54,
+      "column": 33,
+      "message": "github.com/prometheus/common/model.NameValidationScheme is deprecated: This variable should not be used and might be removed in the far future. If you wish to stick to the legacy name validation use `IsValidLegacyMetricName()` and `LabelName.IsValidLegacy()` methods instead. This variable is here as an escape hatch for emergency cases, given the recent change from `LegacyValidation` to `UTF8Validation`, e.g., to delay UTF-8 migrations in time or aid in debugging unforeseen results of the change. In such a case, a temporary assignment to `LegacyValidation` value in the `init()` function in your main.go or so, could be considered.",
+      "is_test": false,
+      "is_generated": false,
+      "is_vendored": false,
+      "suppress_reason": "nolint:staticcheck"
+    },
+    {
+      "fingerprint": "edccee2b3eb6c0d4",
+      "tool": "staticcheck",
+      "rule": "SA6002",
+      "category": "PERF",
+      "severity": "error",
+      "priority": "low",
+      "score": 25,
+      "file": "tsdb/agent/db.go",
+      "line": 1229,
+      "column": 17,
+      "message": "argument should be pointer-like to avoid allocations",
+      "is_test": false,
+      "is_generated": false,
+      "is_vendored": false,
+      "suppress_reason": "nolint:staticcheck"
+    },
+    {
+      "fingerprint": "edccee2b3eb6c0d4",
+      "tool": "staticcheck",
+      "rule": "SA6002",
+      "category": "PERF",
+      "severity": "error",
+      "priority": "low",
+      "score": 25,
+      "file": "tsdb/agent/db.go",
+      "line": 1347,
+      "column": 18,
+      "message": "argument should be pointer-like to avoid allocations",
+      "is_test": false,
+      "is_generated": false,
+      "is_vendored": false,
+      "suppress_reason": "nolint:staticcheck"
+    },
+    {
+      "fingerprint": "5488b83700ea9f33",
+      "tool": "staticcheck",
+      "rule": "SA5012",
+      "category": "CORRECTNESS",
+      "severity": "error",
+      "priority": "low",
+      "score": 20,
+      "file": "model/labels/labels_test.go",
+      "line": 464,
+      "column": 41,
+      "message": "variadic argument \"ss\" is expected to have even number of elements, but has 3 elements",
+      "is_test": true,
+      "is_generated": false,
+      "is_vendored": false,
+      "suppress_reason": "nolint:staticcheck"
+    },
+    {
+      "fingerprint": "cb0048a3eabcc10b",
+      "tool": "staticcheck",
+      "rule": "SA4010",
+      "category": "CODE.SMELL",
+      "severity": "error",
+      "priority": "low",
+      "score": 17,
+      "file": "tsdb/db_test.go",
+      "line": 3955,
+      "column": 9,
+      "message": "this result of append is never used, except maybe in other appends",
+      "is_test": true,
+      "is_generated": false,
+      "is_vendored": false,
+      "suppress_reason": "nolint:staticcheck"
+    },
+    {
+      "fingerprint": "cb0048a3eabcc10b",
+      "tool": "staticcheck",
+      "rule": "SA4010",
+      "category": "CODE.SMELL",
+      "severity": "error",
+      "priority": "low",
+      "score": 17,
+      "file": "tsdb/db_test.go",
+      "line": 4086,
+      "column": 9,
+      "message": "this result of append is never used, except maybe in other appends",
+      "is_test": true,
+      "is_generated": false,
+      "is_vendored": false,
+      "suppress_reason": "nolint:staticcheck"
+    },
+    {
+      "fingerprint": "2c4027d9f79a096a",
+      "tool": "staticcheck",
+      "rule": "SA1019",
+      "category": "API.MISUSE",
+      "severity": "error",
+      "priority": "low",
+      "score": 12,
+      "file": "cmd/prometheus/main_test.go",
+      "line": 56,
+      "column": 2,
+      "message": "github.com/prometheus/common/model.NameValidationScheme is deprecated: This variable should not be used and might be removed in the far future. If you wish to stick to the legacy name validation use `IsValidLegacyMetricName()` and `LabelName.IsValidLegacy()` methods instead. This variable is here as an escape hatch for emergency cases, given the recent change from `LegacyValidation` to `UTF8Validation`, e.g., to delay UTF-8 migrations in time or aid in debugging unforeseen results of the change. In such a case, a temporary assignment to `LegacyValidation` value in the `init()` function in your main.go or so, could be considered.",
+      "is_test": true,
+      "is_generated": false,
+      "is_vendored": false,
+      "suppress_reason": "nolint:staticcheck"
+    },
+    {
+      "fingerprint": "68c0f754778e3981",
+      "tool": "staticcheck",
+      "rule": "SA1019",
+      "category": "API.MISUSE",
+      "severity": "error",
+      "priority": "low",
+      "score": 12,
+      "file": "cmd/promtool/main_test.go",
+      "line": 48,
+      "column": 2,
+      "message": "github.com/prometheus/common/model.NameValidationScheme is deprecated: This variable should not be used and might be removed in the far future. If you wish to stick to the legacy name validation use `IsValidLegacyMetricName()` and `LabelName.IsValidLegacy()` methods instead. This variable is here as an escape hatch for emergency cases, given the recent change from `LegacyValidation` to `UTF8Validation`, e.g., to delay UTF-8 migrations in time or aid in debugging unforeseen results of the change. In such a case, a temporary assignment to `LegacyValidation` value in the `init()` function in your main.go or so, could be considered.",
+      "is_test": true,
+      "is_generated": false,
+      "is_vendored": false,
+      "suppress_reason": "nolint:staticcheck"
+    },
+    {
+      "fingerprint": "5cdecb2abe02e476",
+      "tool": "staticcheck",
+      "rule": "ST1005",
+      "category": "CODE.STYLE",
+      "severity": "error",
+      "priority": "low",
+      "score": 10,
+      "file": "discovery/uyuni/uyuni.go",
+      "line": 145,
+      "column": 10,
+      "message": "error strings should not be capitalized",
+      "is_test": false,
+      "is_generated": false,
+      "is_vendored": false,
+      "suppress_reason": "nolint:staticcheck"
+    },
+    {
+      "fingerprint": "5cdecb2abe02e476",
+      "tool": "staticcheck",
+      "rule": "ST1005",
+      "category": "CODE.STYLE",
+      "severity": "error",
+      "priority": "low",
+      "score": 10,
+      "file": "discovery/uyuni/uyuni.go",
+      "line": 151,
+      "column": 10,
+      "message": "error strings should not be capitalized",
+      "is_test": false,
+      "is_generated": false,
+      "is_vendored": false,
+      "suppress_reason": "nolint:staticcheck"
+    },
+    {
+      "fingerprint": "5cdecb2abe02e476",
+      "tool": "staticcheck",
+      "rule": "ST1005",
+      "category": "CODE.STYLE",
+      "severity": "error",
+      "priority": "low",
+      "score": 10,
+      "file": "discovery/uyuni/uyuni.go",
+      "line": 156,
+      "column": 10,
+      "message": "error strings should not be capitalized",
+      "is_test": false,
+      "is_generated": false,
+      "is_vendored": false,
+      "suppress_reason": "nolint:staticcheck"
+    },
+    {
+      "fingerprint": "5cdecb2abe02e476",
+      "tool": "staticcheck",
+      "rule": "ST1005",
+      "category": "CODE.STYLE",
+      "severity": "error",
+      "priority": "low",
+      "score": 10,
+      "file": "discovery/uyuni/uyuni.go",
+      "line": 160,
+      "column": 10,
+      "message": "error strings should not be capitalized",
+      "is_test": false,
+      "is_generated": false,
+      "is_vendored": false,
+      "suppress_reason": "nolint:staticcheck"
     },
     {
       "fingerprint": "1780058a446d6009",
@@ -3615,7 +3644,8 @@
       "message": "argument should be pointer-like to avoid allocations",
       "is_test": true,
       "is_generated": false,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "nolint:staticcheck"
     },
     {
       "fingerprint": "1780058a446d6009",
@@ -3631,10 +3661,9 @@
       "message": "argument should be pointer-like to avoid allocations",
       "is_test": true,
       "is_generated": false,
-      "is_vendored": false
-    }
-  ],
-  "suppressed": [
+      "is_vendored": false,
+      "suppress_reason": "nolint:staticcheck"
+    },
     {
       "fingerprint": "e05d2e00bbd0922c",
       "tool": "staticcheck",
@@ -3649,7 +3678,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -3665,7 +3695,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -3681,7 +3712,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -3697,7 +3729,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -3713,7 +3746,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -3729,7 +3763,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -3745,7 +3780,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -3761,7 +3797,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -3777,7 +3814,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -3793,7 +3831,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -3809,7 +3848,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -3825,7 +3865,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -3841,7 +3882,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -3857,7 +3899,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -3873,7 +3916,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -3889,7 +3933,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -3905,7 +3950,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -3921,7 +3967,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -3937,7 +3984,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -3953,7 +4001,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -3969,7 +4018,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -3985,7 +4035,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -4001,7 +4052,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -4017,7 +4069,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -4033,7 +4086,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -4049,7 +4103,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -4065,7 +4120,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -4081,7 +4137,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -4097,7 +4154,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -4113,7 +4171,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -4129,7 +4188,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -4145,7 +4205,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -4161,7 +4222,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -4177,7 +4239,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -4193,7 +4256,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -4209,7 +4273,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -4225,7 +4290,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -4241,7 +4307,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "e05d2e00bbd0922c",
@@ -4257,7 +4324,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "b3893fd2bdfe6093",
@@ -4273,7 +4341,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "b3893fd2bdfe6093",
@@ -4289,7 +4358,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "b3893fd2bdfe6093",
@@ -4305,7 +4375,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "b3893fd2bdfe6093",
@@ -4321,7 +4392,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "b3893fd2bdfe6093",
@@ -4337,7 +4409,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "b3893fd2bdfe6093",
@@ -4353,7 +4426,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "b3893fd2bdfe6093",
@@ -4369,7 +4443,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "b3893fd2bdfe6093",
@@ -4385,7 +4460,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "b3893fd2bdfe6093",
@@ -4401,7 +4477,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "b3893fd2bdfe6093",
@@ -4417,7 +4494,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "b3893fd2bdfe6093",
@@ -4433,7 +4511,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "b3893fd2bdfe6093",
@@ -4449,7 +4528,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "b3893fd2bdfe6093",
@@ -4465,7 +4545,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "b3893fd2bdfe6093",
@@ -4481,7 +4562,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "b3893fd2bdfe6093",
@@ -4497,7 +4579,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "b3893fd2bdfe6093",
@@ -4513,7 +4596,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "b3893fd2bdfe6093",
@@ -4529,7 +4613,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "b3893fd2bdfe6093",
@@ -4545,7 +4630,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "b3893fd2bdfe6093",
@@ -4561,7 +4647,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "b3893fd2bdfe6093",
@@ -4577,7 +4664,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "b3893fd2bdfe6093",
@@ -4593,7 +4681,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "6cb04a0a6825d600",
@@ -4609,7 +4698,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "6cb04a0a6825d600",
@@ -4625,7 +4715,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "6cb04a0a6825d600",
@@ -4641,7 +4732,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "6cb04a0a6825d600",
@@ -4657,7 +4749,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "6cb04a0a6825d600",
@@ -4673,7 +4766,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "6cb04a0a6825d600",
@@ -4689,7 +4783,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "6cb04a0a6825d600",
@@ -4705,7 +4800,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "6cb04a0a6825d600",
@@ -4721,7 +4817,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "6cb04a0a6825d600",
@@ -4737,7 +4834,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "6cb04a0a6825d600",
@@ -4753,7 +4851,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "6cb04a0a6825d600",
@@ -4769,7 +4868,8 @@
       "message": "this value of c is never used",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "544fe57ef2419b12",
@@ -4785,7 +4885,8 @@
       "message": "(google.golang.org/protobuf/runtime/protoimpl.MessageInfo).Exporter is deprecated: Exporter will be removed the next time we bump protoimpl.GenVersion. See https://github.com/golang/protobuf/issues/1640 ",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "544fe57ef2419b12",
@@ -4801,7 +4902,8 @@
       "message": "(google.golang.org/protobuf/runtime/protoimpl.MessageInfo).Exporter is deprecated: Exporter will be removed the next time we bump protoimpl.GenVersion. See https://github.com/golang/protobuf/issues/1640 ",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "2ee5f9302780ca23",
@@ -4817,7 +4919,8 @@
       "message": "github.com/prometheus/prometheus/model/labels.MetricName is deprecated: Instead, consider using schema.Metadata structure and its methods for consistent metadata behaviour with the newly added __type__ and __unit__ labels. Alternatively use github.com/prometheus/common/model.MetricNameLabel for the direct replacement.",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "2ee5f9302780ca23",
@@ -4833,7 +4936,8 @@
       "message": "github.com/prometheus/prometheus/model/labels.MetricName is deprecated: Instead, consider using schema.Metadata structure and its methods for consistent metadata behaviour with the newly added __type__ and __unit__ labels. Alternatively use github.com/prometheus/common/model.MetricNameLabel for the direct replacement.",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -4849,7 +4953,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -4865,7 +4970,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -4881,7 +4987,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -4897,7 +5004,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -4913,7 +5021,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -4929,7 +5038,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -4945,7 +5055,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -4961,7 +5072,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -4977,7 +5089,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -4993,7 +5106,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -5009,7 +5123,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -5025,7 +5140,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -5041,7 +5157,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -5057,7 +5174,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -5073,7 +5191,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -5089,7 +5208,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -5105,7 +5225,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -5121,7 +5242,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -5137,7 +5259,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -5153,7 +5276,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -5169,7 +5293,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -5185,7 +5310,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -5201,7 +5327,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -5217,7 +5344,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -5233,7 +5361,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -5249,7 +5378,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -5265,7 +5395,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -5281,7 +5412,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -5297,7 +5429,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -5313,7 +5446,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -5329,7 +5463,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -5345,7 +5480,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -5361,7 +5497,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -5377,7 +5514,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -5393,7 +5531,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -5409,7 +5548,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -5425,7 +5565,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -5441,7 +5582,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -5457,7 +5599,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -5473,7 +5616,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -5489,7 +5633,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     },
     {
       "fingerprint": "22b2392251bf2f2a",
@@ -5505,7 +5650,8 @@
       "message": "unreachable code",
       "is_test": false,
       "is_generated": true,
-      "is_vendored": false
+      "is_vendored": false,
+      "suppress_reason": "generated"
     }
   ]
 }

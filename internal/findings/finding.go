@@ -39,6 +39,10 @@ type Finding struct {
 	IsTest      bool `json:"is_test"`
 	IsGenerated bool `json:"is_generated"`
 	IsVendored  bool `json:"is_vendored"`
+
+	// SuppressReason is why this finding was held back: "vendored",
+	// "generated", or the maintainer's own directive text.
+	SuppressReason string `json:"suppress_reason,omitempty"`
 }
 
 // ToolRun records whether an analyzer actually ran. Without it, a missing
@@ -103,6 +107,7 @@ func Dedupe(in []Finding) []Finding {
 // maintainer cannot fix code they did not write.
 func Rank(repoDir string, in []Finding) (kept, suppressed []Finding) {
 	genCache := map[string]bool{}
+	src := newSourceCache(repoDir)
 
 	for _, f := range in {
 		f.IsTest = isTestFile(f.File)
@@ -112,7 +117,17 @@ func Rank(repoDir string, in []Finding) (kept, suppressed []Finding) {
 		f.Score = score(f)
 		f.Priority = priorityFor(f.Score)
 
-		if f.IsVendored || f.IsGenerated {
+		// Structural filters first, then the maintainer's own judgement.
+		switch {
+		case f.IsVendored:
+			f.SuppressReason = "vendored"
+		case f.IsGenerated:
+			f.SuppressReason = "generated"
+		default:
+			f.SuppressReason = src.suppressedBy(f)
+		}
+
+		if f.SuppressReason != "" {
 			suppressed = append(suppressed, f)
 			continue
 		}
