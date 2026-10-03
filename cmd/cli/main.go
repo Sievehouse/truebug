@@ -1,19 +1,18 @@
 // Command truebug runs Go static analyzers over a repository and emits a
-// single normalized JSON report.
+// single normalized, ranked JSON report.
 //
-// This is the candidate-generation stage: every finding here is a *candidate*,
-// not a confirmed bug. Later stages (triage, verification) filter this down.
+// Everything it reports is a *candidate*, not a confirmed bug. Ranking decides
+// reading order; later stages (triage, verification) decide what is real.
 //
 // Usage:
 //
 //	truebug -repo /path/to/go/repo
 //	truebug -repo /path/to/go/repo -out findings.json
+//	truebug -repo /path/to/go/repo -min-priority high
 package main
 
 import (
 	"bufio"
-	"crypto/sha256"
-	"encoding/hex"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -21,54 +20,30 @@ import (
 	"os/exec"
 	"path/filepath"
 	"regexp"
-	"sort"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/Sievehouse/truebug/internal/findings"
 )
-
-// Finding is one normalized result from any analyzer. Every tool we add gets
-// mapped into this shape, so downstream stages never care which tool spoke.
-type Finding struct {
-	Fingerprint string `json:"fingerprint"`
-	Tool        string `json:"tool"`
-	Rule        string `json:"rule"`
-	Category    string `json:"category"`
-	Severity    string `json:"severity"`
-	File        string `json:"file"`
-	Line        int    `json:"line"`
-	Column      int    `json:"column"`
-	Message     string `json:"message"`
-}
-
-// ToolRun records whether an analyzer actually ran. Without this, a missing
-// binary looks identical to a clean repo, which is the most dangerous kind of
-// silent failure in a scanner.
-type ToolRun struct {
-	Name     string  `json:"name"`
-	Ran      bool    `json:"ran"`
-	Error    string  `json:"error,omitempty"`
-	Findings int     `json:"findings"`
-	Seconds  float64 `json:"seconds"`
-}
-
-type Report struct {
-	Repo        string    `json:"repo"`
-	Commit      string    `json:"commit,omitempty"`
-	GeneratedAt time.Time `json:"generated_at"`
-	Tools       []ToolRun `json:"tools"`
-	Findings    []Finding `json:"findings"`
-}
 
 type analyzer interface {
 	Name() string
-	Run(repoDir string) ([]Finding, error)
+	Run(repoDir string) ([]findings.Finding, error)
 }
+
+var priorityRank = map[string]int{"low": 0, "medium": 1, "high": 2, "critical": 3}
 
 func main() {
 	repoFlag := flag.String("repo", ".", "path to the Go module root to analyze")
 	outFlag := flag.String("out", "", "write the JSON report here (default: stdout)")
+	minFlag := flag.String("min-priority", "low", "drop findings below this priority (low|medium|high|critical)")
 	flag.Parse()
+
+	minRank, ok := priorityRank[strings.ToLower(*minFlag)]
+	if !ok {
+		fatal(fmt.Errorf("unknown -min-priority %q", *minFlag))
+	}
 
 	repoDir, err := filepath.Abs(*repoFlag)
 	if err != nil {
@@ -78,38 +53,40 @@ func main() {
 		fatal(fmt.Errorf("no go.mod in %s: point -repo at a Go module root", repoDir))
 	}
 
-	report := Report{
+	report := findings.Report{
 		Repo:        repoDir,
 		Commit:      gitCommit(repoDir),
 		GeneratedAt: time.Now().UTC(),
 	}
 
-	analyzers := []analyzer{vetAnalyzer{}, staticcheckAnalyzer{}}
-	for _, a := range analyzers {
+	var all []findings.Finding
+	for _, a := range []analyzer{vetAnalyzer{}, staticcheckAnalyzer{}} {
 		start := time.Now()
-		findings, err := a.Run(repoDir)
-		run := ToolRun{Name: a.Name(), Seconds: round2(time.Since(start).Seconds())}
+		got, err := a.Run(repoDir)
+		run := findings.ToolRun{Name: a.Name(), Seconds: round2(time.Since(start).Seconds())}
 		if err != nil {
 			run.Error = err.Error()
 		} else {
 			run.Ran = true
-			run.Findings = len(findings)
-			report.Findings = append(report.Findings, findings...)
+			run.Findings = len(got)
+			all = append(all, got...)
 		}
 		report.Tools = append(report.Tools, run)
 	}
 
-	report.Findings = dedupe(report.Findings)
-	sort.Slice(report.Findings, func(i, j int) bool {
-		a, b := report.Findings[i], report.Findings[j]
-		if a.File != b.File {
-			return a.File < b.File
+	kept, suppressed := findings.Rank(repoDir, findings.Dedupe(all))
+
+	if minRank > 0 {
+		filtered := kept[:0]
+		for _, f := range kept {
+			if priorityRank[f.Priority] >= minRank {
+				filtered = append(filtered, f)
+			}
 		}
-		if a.Line != b.Line {
-			return a.Line < b.Line
-		}
-		return a.Rule < b.Rule
-	})
+		kept = filtered
+	}
+	report.Findings = kept
+	report.Suppressed = suppressed
 
 	blob, err := json.MarshalIndent(report, "", "  ")
 	if err != nil {
@@ -134,7 +111,7 @@ type vetAnalyzer struct{}
 
 func (vetAnalyzer) Name() string { return "go vet" }
 
-func (vetAnalyzer) Run(repoDir string) ([]Finding, error) {
+func (vetAnalyzer) Run(repoDir string) ([]findings.Finding, error) {
 	if _, err := exec.LookPath("go"); err != nil {
 		return nil, fmt.Errorf("go not found on PATH")
 	}
@@ -145,8 +122,7 @@ func (vetAnalyzer) Run(repoDir string) ([]Finding, error) {
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 
-	// A non-zero exit means vet found something, which is not an error here.
-	// Only a missing binary (checked above) is a real failure.
+	// A non-zero exit means vet found something, which is not a failure here.
 	_ = cmd.Run()
 
 	return parseVet(repoDir, stderr.String()+stdout.String()), nil
@@ -155,8 +131,8 @@ func (vetAnalyzer) Run(repoDir string) ([]Finding, error) {
 // go vet emits "file:line:col: message", interleaved with "# package" headers.
 var vetLineRe = regexp.MustCompile(`^(.*?):(\d+):(\d+):\s+(.*)$`)
 
-func parseVet(repoDir, output string) []Finding {
-	var findings []Finding
+func parseVet(repoDir, output string) []findings.Finding {
+	var out []findings.Finding
 	sc := bufio.NewScanner(strings.NewReader(output))
 	sc.Buffer(make([]byte, 0, 64*1024), 4*1024*1024)
 
@@ -174,12 +150,12 @@ func parseVet(repoDir, output string) []Finding {
 		msg := m[4]
 		rule := vetRule(msg)
 
-		findings = append(findings, newFinding(
+		out = append(out, findings.New(
 			"go vet", rule, categoryForVet(rule), "medium",
 			relPath(repoDir, m[1]), lineNo, colNo, msg,
 		))
 	}
-	return findings
+	return out
 }
 
 // go vet's plain output drops the analyzer name, so recover it from the
@@ -203,8 +179,6 @@ func vetRule(msg string) string {
 		return "unsafeptr"
 	case strings.Contains(lower, "struct field"), strings.Contains(lower, "struct tag"):
 		return "structtag"
-	case strings.Contains(lower, "non-constant format string"):
-		return "printf"
 	default:
 		return "vet.other"
 	}
@@ -233,7 +207,7 @@ type staticcheckAnalyzer struct{}
 
 func (staticcheckAnalyzer) Name() string { return "staticcheck" }
 
-func (staticcheckAnalyzer) Run(repoDir string) ([]Finding, error) {
+func (staticcheckAnalyzer) Run(repoDir string) ([]findings.Finding, error) {
 	if _, err := exec.LookPath("staticcheck"); err != nil {
 		return nil, fmt.Errorf(
 			"staticcheck not found on PATH (install: go install honnef.co/go/tools/cmd/staticcheck@latest)")
@@ -260,8 +234,8 @@ type scResult struct {
 	} `json:"location"`
 }
 
-func parseStaticcheck(repoDir, output string) []Finding {
-	var findings []Finding
+func parseStaticcheck(repoDir, output string) []findings.Finding {
+	var out []findings.Finding
 	sc := bufio.NewScanner(strings.NewReader(output))
 	sc.Buffer(make([]byte, 0, 64*1024), 8*1024*1024)
 
@@ -274,14 +248,13 @@ func parseStaticcheck(repoDir, output string) []Finding {
 		if err := json.Unmarshal([]byte(line), &r); err != nil {
 			continue
 		}
-		findings = append(findings, newFinding(
-			"staticcheck", r.Code, categoryForStaticcheck(r.Code),
-			severityForStaticcheck(r.Severity),
+		out = append(out, findings.New(
+			"staticcheck", r.Code, categoryForStaticcheck(r.Code), r.Severity,
 			relPath(repoDir, r.Location.File), r.Location.Line, r.Location.Column,
 			r.Message,
 		))
 	}
-	return findings
+	return out
 }
 
 func categoryForStaticcheck(code string) string {
@@ -309,55 +282,9 @@ func categoryForStaticcheck(code string) string {
 	}
 }
 
-func severityForStaticcheck(s string) string {
-	switch strings.ToLower(s) {
-	case "error":
-		return "high"
-	case "warning":
-		return "medium"
-	default:
-		return "low"
-	}
-}
-
 // ---------------------------------------------------------------------------
 // helpers
 // ---------------------------------------------------------------------------
-
-// newFinding builds a Finding with a fingerprint that deliberately excludes the
-// line number, so unrelated edits above a finding do not make it look new.
-func newFinding(tool, rule, category, severity, file string, line, col int, msg string) Finding {
-	key := strings.Join([]string{tool, rule, file, msg}, "|")
-	sum := sha256.Sum256([]byte(key))
-
-	return Finding{
-		Fingerprint: hex.EncodeToString(sum[:])[:16],
-		Tool:        tool,
-		Rule:        rule,
-		Category:    category,
-		Severity:    severity,
-		File:        file,
-		Line:        line,
-		Column:      col,
-		Message:     msg,
-	}
-}
-
-// dedupe drops exact repeats, which happen when a package is analyzed under
-// several build configurations.
-func dedupe(in []Finding) []Finding {
-	seen := make(map[string]bool, len(in))
-	out := in[:0]
-	for _, f := range in {
-		key := fmt.Sprintf("%s:%d:%d", f.Fingerprint, f.Line, f.Column)
-		if seen[key] {
-			continue
-		}
-		seen[key] = true
-		out = append(out, f)
-	}
-	return out
-}
 
 func relPath(repoDir, p string) string {
 	p = strings.TrimPrefix(p, "./")
@@ -384,46 +311,68 @@ func round2(f float64) float64 {
 	return float64(int(f*100+0.5)) / 100
 }
 
-// summarize writes a short human-readable digest to stderr, so stdout stays
-// pure JSON and remains pipeable.
-func summarize(r Report, outPath string) {
-	byCategory := map[string]int{}
-	for _, f := range r.Findings {
-		byCategory[f.Category]++
-	}
-	cats := make([]string, 0, len(byCategory))
-	for c := range byCategory {
-		cats = append(cats, c)
-	}
-	sort.Slice(cats, func(i, j int) bool { return byCategory[cats[i]] > byCategory[cats[j]] })
+// summarize writes a human-readable digest to stderr, so stdout stays pure
+// JSON and remains pipeable.
+func summarize(r findings.Report, outPath string) {
+	bar := strings.Repeat("-", 62)
 
-	fmt.Fprintf(os.Stderr, "\n%s\n", strings.Repeat("-", 46))
-	fmt.Fprintf(os.Stderr, "repo:     %s\n", r.Repo)
-	if r.Commit != "" {
-		fmt.Fprintf(os.Stderr, "commit:   %s\n", r.Commit[:min(12, len(r.Commit))])
+	fmt.Fprintf(os.Stderr, "\n%s\n", bar)
+	fmt.Fprintf(os.Stderr, "repo:   %s\n", r.Repo)
+	if len(r.Commit) >= 12 {
+		fmt.Fprintf(os.Stderr, "commit: %s\n", r.Commit[:12])
 	}
 	for _, t := range r.Tools {
 		if t.Ran {
-			fmt.Fprintf(os.Stderr, "%-14s %4d findings  (%.2fs)\n", t.Name, t.Findings, t.Seconds)
+			fmt.Fprintf(os.Stderr, "  %-14s %4d raw  (%.2fs)\n", t.Name, t.Findings, t.Seconds)
 		} else {
-			fmt.Fprintf(os.Stderr, "%-14s SKIPPED: %s\n", t.Name, t.Error)
+			fmt.Fprintf(os.Stderr, "  %-14s SKIPPED: %s\n", t.Name, t.Error)
 		}
 	}
-	fmt.Fprintf(os.Stderr, "%s\n", strings.Repeat("-", 46))
-	fmt.Fprintf(os.Stderr, "total candidates: %d\n", len(r.Findings))
-	for _, c := range cats {
-		fmt.Fprintf(os.Stderr, "  %-18s %d\n", c, byCategory[c])
+
+	byPriority := map[string]int{}
+	tests := 0
+	for _, f := range r.Findings {
+		byPriority[f.Priority]++
+		if f.IsTest {
+			tests++
+		}
 	}
+
+	fmt.Fprintf(os.Stderr, "%s\n", bar)
+	fmt.Fprintf(os.Stderr, "reported: %d   (suppressed %d vendored/generated, %d in tests)\n",
+		len(r.Findings), len(r.Suppressed), tests)
+	for _, p := range []string{"critical", "high", "medium", "low"} {
+		if byPriority[p] > 0 {
+			fmt.Fprintf(os.Stderr, "  %-9s %d\n", p, byPriority[p])
+		}
+	}
+
+	top := r.Findings
+	if len(top) > 10 {
+		top = top[:10]
+	}
+	if len(top) > 0 {
+		fmt.Fprintf(os.Stderr, "%s\ntop findings:\n", bar)
+		for i, f := range top {
+			marker := ""
+			if f.IsTest {
+				marker = "  [test]"
+			}
+			fmt.Fprintf(os.Stderr, "%2d. [%3d %-8s] %-9s %s:%d%s\n     %s\n",
+				i+1, f.Score, f.Priority, f.Rule, f.File, f.Line, marker, truncate(f.Message, 72))
+		}
+	}
+
 	if outPath != "" {
 		fmt.Fprintf(os.Stderr, "\nwrote %s\n", outPath)
 	}
 }
 
-func min(a, b int) int {
-	if a < b {
-		return a
+func truncate(s string, n int) string {
+	if len(s) <= n {
+		return s
 	}
-	return b
+	return s[:n-1] + "..."
 }
 
 func fatal(err error) {
