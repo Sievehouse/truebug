@@ -1,0 +1,43 @@
+{
+  "repo": "C:\\Users\\MOHIT YADAV\\cobra",
+  "commit": "adbc8813901bba65827259daa8e22ff94ec1f30e",
+  "generated_at": "2026-10-03T20:19:23.7482472Z",
+  "tools": [
+    {
+      "name": "go vet",
+      "ran": true,
+      "findings": 0,
+      "seconds": 5.16
+    },
+    {
+      "name": "staticcheck",
+      "ran": true,
+      "findings": 2,
+      "seconds": 2.74
+    }
+  ],
+  "findings": [
+    {
+      "fingerprint": "14f9dc901609c7fe",
+      "tool": "staticcheck",
+      "rule": "SA1029",
+      "category": "API.MISUSE",
+      "severity": "high",
+      "file": "command_test.go",
+      "line": 2930,
+      "column": 58,
+      "message": "should not use built-in type string as key for value; define your own type to avoid collisions"
+    },
+    {
+      "fingerprint": "a9ecbe2381f9b035",
+      "tool": "staticcheck",
+      "rule": "SA1029",
+      "category": "API.MISUSE",
+      "severity": "high",
+      "file": "completions_test.go",
+      "line": 1301,
+      "column": 49,
+      "message": "should not use built-in type string as key for value; define your own type to avoid collisions"
+    }
+  ]
+}
