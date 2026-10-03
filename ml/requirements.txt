@@ -1,0 +1,23 @@
+# Core training stack. Versions are deliberately unpinned during research;
+# pin them before any result goes in a paper.
+torch
+transformers
+peft
+trl
+bitsandbytes
+accelerate
+datasets
+sentence-transformers
+
+# Evaluation and analysis
+scikit-learn
+numpy
+pandas
+pyarrow
+duckdb
+
+# Tracking
+mlflow
+
+# Serving (self-hosted, OpenAI-compatible)
+# vllm        # install separately; needs a CUDA build matching the host

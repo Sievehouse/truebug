@@ -1,0 +1,9 @@
+# Short corpus for laptop runs. Use with -jobs 1.
+https://github.com/spf13/cobra
+https://github.com/gorilla/mux
+https://github.com/hashicorp/raft
+https://github.com/prometheus/client_golang
+https://github.com/NVIDIA/go-nvml
+https://github.com/NVIDIA/k8s-device-plugin
+https://github.com/helm/helm
+https://github.com/grpc/grpc-go

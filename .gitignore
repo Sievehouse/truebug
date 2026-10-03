@@ -1,10 +1,29 @@
-truebug.exe
-findings.json
+# build output
 *.exe
+*.dll
+*.so
+*.dylib
+truebug
+truebug-batch
 
-.\work
-.\bench\results
+# scan artifacts
+findings.json
+prom.json
+negatives.jsonl
+*.jsonl
 
+# working directories
 work/
 bench/results/
 
+# local tooling
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/

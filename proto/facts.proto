@@ -1,0 +1,102 @@
+// Fact schema: the contract between the Go platform and the Python ML side.
+//
+// Not generated or used yet. It is here so the shape is argued about before
+// code depends on it.
+//
+// Deliberately a *fact schema*, not an intermediate representation. A shared
+// dataflow IR across languages costs years per language; a shared fact schema
+// lets each language keep its own deep semantics and still emit comparable
+// facts.
+
+syntax = "proto3";
+
+package truebug.v1;
+
+option go_package = "github.com/Sievehouse/truebug/internal/pb;pb";
+
+// A repository at one commit under one build configuration. Build config is
+// part of the identity: files excluded by build tags are invisible to the type
+// checker, so the same commit yields different facts under different tags.
+message Snapshot {
+  string repo = 1;
+  string commit = 2;
+  string go_version = 3;
+  string goos = 4;
+  string goarch = 5;
+  repeated string build_tags = 6;
+}
+
+message Symbol {
+  string moniker = 1;  // scip-style, stable across commits
+  string package = 2;
+  string name = 3;
+  string signature = 4;
+  string file = 5;
+  int32 line_start = 6;
+  int32 line_end = 7;
+  bool exported = 8;
+  bool is_test = 9;
+  bool is_generated = 10;
+}
+
+// Provenance on every edge. Model-inferred edges are allowed but can never be
+// the only support for a high-severity finding.
+enum Producer {
+  PRODUCER_UNSPECIFIED = 0;
+  PRODUCER_SCIP = 1;
+  PRODUCER_SSA = 2;
+  PRODUCER_VTA = 3;
+  PRODUCER_CHA = 4;
+  PRODUCER_TREESITTER = 5;
+  PRODUCER_HELM_RENDER = 6;
+  PRODUCER_MODEL = 7;
+}
+
+message Edge {
+  string kind = 1;  // CALLS, READS, WRITES, SPAWNS, GUARDS, NEEDS_PERMISSION
+  string from = 2;
+  string to = 3;
+  Producer producer = 4;
+  float confidence = 5;
+}
+
+// Evidence strength, from weakest to strongest. A finding's level is the
+// highest rung it has reached.
+enum EvidenceLevel {
+  EVIDENCE_HYPOTHESIS = 0;    // a model said so
+  EVIDENCE_STATIC_FACT = 1;   // an analyzer proved something concrete
+  EVIDENCE_CORROBORATED = 2;  // independent signals agree
+  EVIDENCE_REPRODUCED = 3;    // reproduced under -race, goleak, or a test
+  EVIDENCE_PATCH_VERIFIED = 4; // fix compiles, tests pass, finding gone
+}
+
+enum Verdict {
+  VERDICT_UNSPECIFIED = 0;
+  VERDICT_CONFIRMED = 1;
+  VERDICT_LIKELY = 2;
+  VERDICT_POSSIBLE = 3;
+  VERDICT_REJECTED = 4;
+}
+
+message Finding {
+  string fingerprint = 1;  // excludes line number, so edits above do not reset it
+  string tool = 2;
+  string rule = 3;
+  string category = 4;
+  string file = 5;
+  int32 line = 6;
+  int32 column = 7;
+  string message = 8;
+
+  int32 score = 9;
+  string priority = 10;
+  string suppress_reason = 11;
+
+  EvidenceLevel evidence_level = 12;
+  Verdict verdict = 13;
+  float calibrated_probability = 14;  // meaningful only against adjudicated data
+
+  string root_cause = 15;
+  string impact = 16;
+  string suggested_fix = 17;
+}
