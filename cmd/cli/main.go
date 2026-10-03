@@ -1,36 +1,27 @@
-// Command truebug runs Go static analyzers over a repository and emits a
-// single normalized, ranked JSON report.
+// Command truebug scans one Go repository and emits a ranked JSON report.
 //
 // Everything it reports is a *candidate*, not a confirmed bug. Ranking decides
-// reading order; later stages (triage, verification) decide what is real.
+// reading order; later stages decide what is real.
 //
 // Usage:
 //
 //	truebug -repo /path/to/go/repo
 //	truebug -repo /path/to/go/repo -out findings.json
 //	truebug -repo /path/to/go/repo -min-priority high
+//	truebug -repo /path/to/go/repo -negatives negatives.jsonl
 package main
 
 import (
-	"bufio"
 	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
-	"regexp"
-	"strconv"
 	"strings"
-	"time"
 
+	"github.com/Sievehouse/truebug/internal/analyzers"
 	"github.com/Sievehouse/truebug/internal/findings"
 )
-
-type analyzer interface {
-	Name() string
-	Run(repoDir string) ([]findings.Finding, error)
-}
 
 var priorityRank = map[string]int{"low": 0, "medium": 1, "high": 2, "critical": 3}
 
@@ -54,40 +45,17 @@ func main() {
 		fatal(fmt.Errorf("no go.mod in %s: point -repo at a Go module root", repoDir))
 	}
 
-	report := findings.Report{
-		Repo:        repoDir,
-		Commit:      gitCommit(repoDir),
-		GeneratedAt: time.Now().UTC(),
-	}
-
-	var all []findings.Finding
-	for _, a := range []analyzer{vetAnalyzer{}, staticcheckAnalyzer{}} {
-		start := time.Now()
-		got, err := a.Run(repoDir)
-		run := findings.ToolRun{Name: a.Name(), Seconds: round2(time.Since(start).Seconds())}
-		if err != nil {
-			run.Error = err.Error()
-		} else {
-			run.Ran = true
-			run.Findings = len(got)
-			all = append(all, got...)
-		}
-		report.Tools = append(report.Tools, run)
-	}
-
-	kept, suppressed := findings.Rank(repoDir, findings.Dedupe(all))
+	report := analyzers.Scan(repoDir)
 
 	if minRank > 0 {
-		filtered := kept[:0]
-		for _, f := range kept {
+		kept := report.Findings[:0]
+		for _, f := range report.Findings {
 			if priorityRank[f.Priority] >= minRank {
-				filtered = append(filtered, f)
+				kept = append(kept, f)
 			}
 		}
-		kept = filtered
+		report.Findings = kept
 	}
-	report.Findings = kept
-	report.Suppressed = suppressed
 
 	blob, err := json.MarshalIndent(report, "", "  ")
 	if err != nil {
@@ -122,218 +90,11 @@ func writeNegatives(repoDir string, report findings.Report, path string) {
 		buf.Write(line)
 		buf.WriteByte('\n')
 	}
+
 	if err := os.WriteFile(path, []byte(buf.String()), 0o644); err != nil {
 		fatal(err)
 	}
 	fmt.Fprintf(os.Stderr, "mined %d hard negatives -> %s\n", len(negs), path)
-}
-
-// ---------------------------------------------------------------------------
-// go vet
-// ---------------------------------------------------------------------------
-
-type vetAnalyzer struct{}
-
-func (vetAnalyzer) Name() string { return "go vet" }
-
-func (vetAnalyzer) Run(repoDir string) ([]findings.Finding, error) {
-	if _, err := exec.LookPath("go"); err != nil {
-		return nil, fmt.Errorf("go not found on PATH")
-	}
-	cmd := exec.Command("go", "vet", "./...")
-	cmd.Dir = repoDir
-
-	var stdout, stderr strings.Builder
-	cmd.Stdout = &stdout
-	cmd.Stderr = &stderr
-
-	// A non-zero exit means vet found something, which is not a failure here.
-	_ = cmd.Run()
-
-	return parseVet(repoDir, stderr.String()+stdout.String()), nil
-}
-
-// go vet emits "file:line:col: message", interleaved with "# package" headers.
-var vetLineRe = regexp.MustCompile(`^(.*?):(\d+):(\d+):\s+(.*)$`)
-
-func parseVet(repoDir, output string) []findings.Finding {
-	var out []findings.Finding
-	sc := bufio.NewScanner(strings.NewReader(output))
-	sc.Buffer(make([]byte, 0, 64*1024), 4*1024*1024)
-
-	for sc.Scan() {
-		line := strings.TrimSpace(sc.Text())
-		if line == "" || strings.HasPrefix(line, "#") {
-			continue
-		}
-		m := vetLineRe.FindStringSubmatch(line)
-		if m == nil {
-			continue
-		}
-		lineNo, _ := strconv.Atoi(m[2])
-		colNo, _ := strconv.Atoi(m[3])
-		msg := m[4]
-		rule := vetRule(msg)
-
-		out = append(out, findings.New(
-			"go vet", rule, categoryForVet(rule), "medium",
-			relPath(repoDir, m[1]), lineNo, colNo, msg,
-		))
-	}
-	return out
-}
-
-// go vet's plain output drops the analyzer name, so recover it from the
-// message. Anything unmatched stays "vet.other" rather than being guessed at.
-func vetRule(msg string) string {
-	lower := strings.ToLower(msg)
-	switch {
-	case strings.Contains(lower, "cancel function"), strings.Contains(lower, "lost cancel"):
-		return "lostcancel"
-	case strings.Contains(lower, "passes lock by value"), strings.Contains(lower, "copies lock value"):
-		return "copylocks"
-	case strings.Contains(lower, "loop variable"):
-		return "loopclosure"
-	case strings.Contains(lower, "unreachable code"):
-		return "unreachable"
-	case strings.Contains(lower, "format"), strings.Contains(lower, "printf"):
-		return "printf"
-	case strings.Contains(lower, "self-assignment"):
-		return "assign"
-	case strings.Contains(lower, "possible misuse of"):
-		return "unsafeptr"
-	case strings.Contains(lower, "struct field"), strings.Contains(lower, "struct tag"):
-		return "structtag"
-	default:
-		return "vet.other"
-	}
-}
-
-func categoryForVet(rule string) string {
-	switch rule {
-	case "lostcancel":
-		return "CTX.PROPAGATION"
-	case "copylocks", "loopclosure":
-		return "CONC.MISUSE"
-	case "printf", "structtag", "unsafeptr":
-		return "API.MISUSE"
-	case "unreachable", "assign":
-		return "CODE.SMELL"
-	default:
-		return "UNCATEGORIZED"
-	}
-}
-
-// ---------------------------------------------------------------------------
-// staticcheck
-// ---------------------------------------------------------------------------
-
-type staticcheckAnalyzer struct{}
-
-func (staticcheckAnalyzer) Name() string { return "staticcheck" }
-
-func (staticcheckAnalyzer) Run(repoDir string) ([]findings.Finding, error) {
-	if _, err := exec.LookPath("staticcheck"); err != nil {
-		return nil, fmt.Errorf(
-			"staticcheck not found on PATH (install: go install honnef.co/go/tools/cmd/staticcheck@latest)")
-	}
-	cmd := exec.Command("staticcheck", "-f", "json", "./...")
-	cmd.Dir = repoDir
-
-	var stdout, stderr strings.Builder
-	cmd.Stdout = &stdout
-	cmd.Stderr = &stderr
-	_ = cmd.Run()
-
-	return parseStaticcheck(repoDir, stdout.String()), nil
-}
-
-type scResult struct {
-	Code     string `json:"code"`
-	Severity string `json:"severity"`
-	Message  string `json:"message"`
-	Location struct {
-		File   string `json:"file"`
-		Line   int    `json:"line"`
-		Column int    `json:"column"`
-	} `json:"location"`
-}
-
-func parseStaticcheck(repoDir, output string) []findings.Finding {
-	var out []findings.Finding
-	sc := bufio.NewScanner(strings.NewReader(output))
-	sc.Buffer(make([]byte, 0, 64*1024), 8*1024*1024)
-
-	for sc.Scan() {
-		line := strings.TrimSpace(sc.Text())
-		if line == "" || !strings.HasPrefix(line, "{") {
-			continue
-		}
-		var r scResult
-		if err := json.Unmarshal([]byte(line), &r); err != nil {
-			continue
-		}
-		out = append(out, findings.New(
-			"staticcheck", r.Code, categoryForStaticcheck(r.Code), r.Severity,
-			relPath(repoDir, r.Location.File), r.Location.Line, r.Location.Column,
-			r.Message,
-		))
-	}
-	return out
-}
-
-func categoryForStaticcheck(code string) string {
-	switch {
-	case strings.HasPrefix(code, "SA1"):
-		return "API.MISUSE"
-	case strings.HasPrefix(code, "SA2"):
-		return "CONC.MISUSE"
-	case strings.HasPrefix(code, "SA3"):
-		return "TEST.MISUSE"
-	case strings.HasPrefix(code, "SA4"):
-		return "CODE.SMELL"
-	case strings.HasPrefix(code, "SA5"):
-		return "CORRECTNESS"
-	case strings.HasPrefix(code, "SA6"):
-		return "PERF"
-	case strings.HasPrefix(code, "SA9"):
-		return "CORRECTNESS"
-	case strings.HasPrefix(code, "S1"):
-		return "CODE.SMELL"
-	case strings.HasPrefix(code, "ST1"), strings.HasPrefix(code, "QF1"):
-		return "CODE.STYLE"
-	default:
-		return "UNCATEGORIZED"
-	}
-}
-
-// ---------------------------------------------------------------------------
-// helpers
-// ---------------------------------------------------------------------------
-
-func relPath(repoDir, p string) string {
-	p = strings.TrimPrefix(p, "./")
-	if !filepath.IsAbs(p) {
-		return filepath.ToSlash(p)
-	}
-	if rel, err := filepath.Rel(repoDir, p); err == nil {
-		return filepath.ToSlash(rel)
-	}
-	return filepath.ToSlash(p)
-}
-
-func gitCommit(repoDir string) string {
-	cmd := exec.Command("git", "rev-parse", "HEAD")
-	cmd.Dir = repoDir
-	out, err := cmd.Output()
-	if err != nil {
-		return ""
-	}
-	return strings.TrimSpace(string(out))
-}
-
-func round2(f float64) float64 {
-	return float64(int(f*100+0.5)) / 100
 }
 
 // summarize writes a human-readable digest to stderr, so stdout stays pure

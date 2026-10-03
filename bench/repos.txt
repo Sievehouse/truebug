@@ -1,0 +1,41 @@
+# Corpus for the truebug benchmark.
+#
+# Chosen for the project's target ecosystem: NVIDIA's Go infrastructure and
+# CNCF projects. Heavy goroutine use, Kubernetes controllers, operators.
+#
+# Lines starting with # are ignored. Repositories whose go.mod is not at the
+# root are skipped by the runner and reported as such.
+
+# --- NVIDIA ---------------------------------------------------------------
+https://github.com/NVIDIA/gpu-operator
+https://github.com/NVIDIA/k8s-device-plugin
+https://github.com/NVIDIA/nvidia-container-toolkit
+https://github.com/NVIDIA/dcgm-exporter
+https://github.com/NVIDIA/go-nvml
+https://github.com/NVIDIA/k8s-dra-driver-gpu
+https://github.com/NVIDIA/KAI-Scheduler
+https://github.com/NVIDIA/aistore
+
+# --- CNCF core ------------------------------------------------------------
+https://github.com/etcd-io/etcd
+https://github.com/containerd/containerd
+https://github.com/prometheus/prometheus
+https://github.com/cilium/cilium
+https://github.com/argoproj/argo-cd
+https://github.com/helm/helm
+https://github.com/grpc/grpc-go
+https://github.com/open-telemetry/opentelemetry-collector
+https://github.com/fluxcd/flux2
+https://github.com/knative/serving
+https://github.com/linkerd/linkerd2
+https://github.com/rook/rook
+
+# --- Widely used Go libraries ---------------------------------------------
+https://github.com/spf13/cobra
+https://github.com/prometheus/client_golang
+https://github.com/hashicorp/raft
+https://github.com/gorilla/mux
+https://github.com/go-redis/redis
+https://github.com/minio/minio
+https://github.com/traefik/traefik
+https://github.com/caddyserver/caddy

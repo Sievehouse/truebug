@@ -2,3 +2,9 @@ truebug.exe
 findings.json
 *.exe
 
+.\work
+.\bench\results
+
+work/
+bench/results/
+
