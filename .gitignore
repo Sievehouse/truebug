@@ -30,3 +30,4 @@ venv/corpus/
 *-findings.json
 *-negatives.jsonl
 corpus/
+.truebug-cache/

@@ -72,12 +72,22 @@ No GPU money is spent before this exists.
  
 ## Phase 1 — indexing and the graph
  
-- [ ] Snapshot model: (repo, commit, build config), content-addressed caching
-- [ ] `go/packages` + `go/ssa` loading with per-package timeouts and memory caps
-- [ ] Call graph via VTA, CHA fallback, confidence recorded per edge
-- [ ] Symbol monikers (SCIP-style) so findings diff across commits
-- [ ] Graph tables in SQLite/Postgres; in-memory adjacency per job
+- [x] Snapshot model: (repo, commit, build config), content-addressed caching
+      — `internal/snapshot`, JSON-based, not SQL; see ADR 0005
+- [~] `go/packages` + `go/ssa` loading — timeout bounds the whole load, not
+      each package (`go/packages` has no per-package boundary to interrupt);
+      memory caps not implemented
+- [x] Call graph via VTA, CHA fallback, confidence recorded per edge
+      — `internal/index/callgraph.go`, verified against gorilla/mux (8,642
+      nodes, 2,862 edges, VTA confirmed running); see ADR 0005
+- [x] Symbol monikers (SCIP-style) so findings diff across commits
+      — `internal/index/moniker.go`; simplified, not full SCIP (no
+      cross-repo coordinates, generic instantiations can collide)
+- [~] Graph tables — in-memory adjacency per job already existed
+      (`internal/graph`); persistence is JSON (`internal/snapshot`), not
+      SQLite/Postgres
 - [ ] Incremental re-index: changed packages + reverse dependencies only
+      — current cache is whole-snapshot grain, not per-package
 - [ ] **Sandbox everything** — indexing executes code (cgo, `go generate`,
       module fetches)
 **Why this matters:** the Prometheus scan took ~390s for `go vet` alone on a

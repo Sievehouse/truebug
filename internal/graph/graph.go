@@ -127,6 +127,34 @@ func (g *Graph) Size() (nodes, edges int) {
 func (g *Graph) Out(id string, kinds ...EdgeKind) []Edge { return filterEdges(g.out[id], kinds) }
 func (g *Graph) In(id string, kinds ...EdgeKind) []Edge  { return filterEdges(g.in[id], kinds) }
 
+// All returns every node and every edge in the graph, in a stable order, for
+// serialization. g.out already lists each edge exactly once, keyed by its
+// source: walking it alone is sufficient without also walking g.in, which
+// holds the same edges indexed by destination instead.
+func (g *Graph) All() ([]Node, []Edge) {
+    nodes := make([]Node, 0, len(g.nodes))
+    for _, n := range g.nodes {
+        nodes = append(nodes, n)
+    }
+    sort.Slice(nodes, func(i, j int) bool { return nodes[i].ID < nodes[j].ID })
+
+    var edges []Edge
+    for _, es := range g.out {
+        edges = append(edges, es...)
+    }
+    sort.Slice(edges, func(i, j int) bool {
+        if edges[i].From != edges[j].From {
+            return edges[i].From < edges[j].From
+        }
+        if edges[i].To != edges[j].To {
+            return edges[i].To < edges[j].To
+        }
+        return edges[i].Kind < edges[j].Kind
+    })
+
+    return nodes, edges
+}
+
 func filterEdges(es []Edge, kinds []EdgeKind) []Edge {
     if len(kinds) == 0 {
         return es
