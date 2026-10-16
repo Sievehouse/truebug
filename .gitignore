@@ -26,4 +26,7 @@ bench/results/
 __pycache__/
 *.py[cod]
 .venv/
-venv/
+venv/corpus/
+*-findings.json
+*-negatives.jsonl
+corpus/
